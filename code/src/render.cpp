@@ -212,7 +212,20 @@ namespace MyGeomShader {
 		}"
 		};
 		
-		static const GLchar * geom_shader_source[] = { "" };
+		static const GLchar * geom_shader_source[] =    
+		{ "#version 330									             \n\
+			 layout(triangles) in;						             \n\
+			 layout(triangle_strip, max_vertices = 3) out;	         \n\
+           	 void main()									         \n\
+			{												         \n\
+				vec4 offset = vec4(0.5, 0.5, 0.0, 0.0);			     \n\
+				for (int i = 0; i < 3; i++){					     \n\
+					gl_Position = gl_in[i].gl_Position+offset;	     \n\
+					EmitVertex();								     \n\
+				}											   	     \n\
+				EndPrimitive();										 \n\
+			}"	};
+
 
 
 
@@ -236,6 +249,7 @@ namespace MyGeomShader {
 
 		program = glCreateProgram();
 		glAttachShader(program, vertex_shader);
+		glAttachShader(program, geom_shader);
 		glAttachShader(program, fragment_shader);
 		glLinkProgram(program);
 
