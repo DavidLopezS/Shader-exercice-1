@@ -267,10 +267,10 @@ namespace MyFirstShader {
 										vec4( -0.25,  -0.25, 0.5, 1.0), vec4( -0.25,  0.25, 0.5, 1.0));\n\
 	void main()\n\
 	{\n\
-			vec4 offset = vec4(0.5-sin(time),0.5,0.0,0.0); \n\
+			vec4 offset = vec4(0.5+sin(time),0.5,0.0,0.0); \n\
 	for (int i = 0; i<4; i++)\n\
 	{\n\
-	gl_Position = vertices[i] + gl_in[0].gl_Position+offset;\n\
+	gl_Position = vertices[i] * offset + gl_in[0].gl_Position;\n\
 	EmitVertex();\n\
 	}\n\
 	EndPrimitive();\n\
