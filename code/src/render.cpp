@@ -9,7 +9,15 @@
 ///////// fw decl
 namespace ImGui {
 	void Render();
+
 }
+
+
+
+
+
+
+
 namespace Box {
 void setupCube();
 void cleanupCube();
@@ -28,12 +36,20 @@ namespace Cube {
 	void drawCube();
 }
 
-namespace MyGeomShader {
-	void myInitCode();
-	void myCleanupCode();
-	void myRenderCode(double currentTime);
-}
 
+namespace MyFirstShader {
+
+	void myInitCode(void);
+	GLuint myShaderCompile(void);
+
+	void myCleanupCode(void);
+	void myRenderCode(double currentTime);
+
+	GLuint myRenderProgram;
+	GLuint myVAO;
+
+
+}
 
 
 
@@ -108,11 +124,12 @@ void GLinit(int width, int height) {
 	Axis::setupAxis();
 	Cube::setupCube();*/
 
+	MyFirstShader::myInitCode();
 
 
 
 
-	MyGeomShader::myInitCode();
+
 
 
 
@@ -124,8 +141,8 @@ void GLcleanup() {
 	Axis::cleanupAxis();
 	Cube::cleanupCube();
 */
+	MyFirstShader::myCleanupCode();
 
-	MyGeomShader::myCleanupCode();
 }
 
 void GLrender(double currentTime) {
@@ -143,7 +160,7 @@ void GLrender(double currentTime) {
 	Axis::drawAxis();
 	Cube::drawCube();*/
 
-	MyGeomShader::myRenderCode(currentTime);
+	MyFirstShader::myRenderCode(currentTime);
 
 	ImGui::Render();
 }
@@ -179,28 +196,87 @@ void linkProgram(GLuint program) {
 		delete[] buff;
 	}
 }
-//////////////////////////////MyGeomShader
-
-namespace MyGeomShader {
-	GLuint myRenderProgram;
-	GLuint myVAO;
-
-	void myCleanupCode(void) {
+/////////////////////////////////////MY DUPLICATION SHADER
+namespace MyFirstShader {
+	void myCleanupCode() {
 		glDeleteVertexArrays(1, &myVAO);
 		glDeleteProgram(myRenderProgram);
 	}
+
+
+	//EX0.2
+	
 	GLuint myShaderCompile(void) {
 		static const GLchar * vertex_shader_source[] =
 		{
 			"#version 330										\n\
 		\n\
 		void main() {\n\
-		const vec4 vertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0),\n\
-									   vec4(0.25, 0.25, 0.5, 1.0),\n\
-										vec4( -0.25,  -0.25, 0.5, 1.0));\n\
-		gl_Position = vertices[gl_VertexID];\n\
+		const vec4 vertices = vec4( 0.25, -0.25, 0.5, 1.0);\n\
+		gl_Position = vertices;\n\
 		}"
 		};
+		/*
+		static const GLchar * geom_shader_source[] =
+		{ "#version 330\n\
+		layout(triangles) in;\n\
+		layout(triangle_strip, max_vertices = 9) out;\n\
+		const vec4 myGeomVertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0),\n\
+									   vec4(0.25, 0.25, 0.5, 1.0),\n\
+										vec4( -0.5,  -0.5, 0.5, 1.0));\n\
+		void main()\n\
+		{\n\
+			for (int i = 0; i<3; i++)\n\
+			{\n\
+				gl_Position = gl_in[0].gl_Position+myGeomVertices[i];\n\
+				EmitVertex();\n\
+			}\n\
+			EndPrimitive();\n\
+		}" };
+		*/
+
+
+		/*this should just duplibcate the geometry
+		static const GLchar * geom_shader_source[] =
+		{ "#version 330\n\
+		layout(triangles) in;\n\
+		layout(triangle_strip, max_vertices = 6) out;\n\
+		vec4 offset = vec4( 1.0, -0.25, 0.5, 1.0); \n\
+		void main()\n\
+		{\n\
+			for (int i = 0; i<3; i++)\n\
+			{\n\
+				gl_Position = gl_in[i].gl_Position;\n\
+				EmitVertex();\n\
+			}\n\
+			EndPrimitive();\n\
+			for (i = 0; i<3; i++)\n\
+			{\n\
+				gl_Position = gl_in[i].gl_Position + offset;\n\
+				EmitVertex();\n\
+			}\n\
+		EndPrimitive();\n\
+		}" };*/
+		static const GLchar * geom_shader_source[] =
+		{ "#version 330\n\
+	uniform float time;\n\
+	layout(triangles) in;\n\
+	layout(triangle_strip, max_vertices = 4) out;\n\
+		const vec4 vertices[4] = vec4[4](vec4( 0.25, -0.25, 0.5, 1.0),\n\
+									   vec4(0.25, 0.25, 0.5, 1.0),\n\
+										vec4( -0.25,  -0.25, 0.5, 1.0), vec4( -0.25,  0.25, 0.5, 1.0));\n\
+	void main()\n\
+	{\n\
+			vec4 offset = vec4(0.5-sin(time),0.5,0.0,0.0); \n\
+	for (int i = 0; i<4; i++)\n\
+	{\n\
+	gl_Position = vertices[i] + gl_in[0].gl_Position+offset;\n\
+	EmitVertex();\n\
+	}\n\
+	EndPrimitive();\n\
+	}" };
+
+
 		static const GLchar * fragment_shader_source[] =
 		{
 			"#version 330\n\
@@ -211,37 +287,22 @@ namespace MyGeomShader {
 		color = vec4(0.0,0.8,1.0,1.0);\n\
 		}"
 		};
-		
-		static const GLchar * geom_shader_source[] =    
-		{ "#version 330									             \n\
-			 layout(triangles) in;						             \n\
-			 layout(triangle_strip, max_vertices = 3) out;	         \n\
-           	 void main()									         \n\
-			{												         \n\
-				vec4 offset = vec4(0.5, 0.5, 0.0, 0.0);			     \n\
-				for (int i = 0; i < 3; i++){					     \n\
-					gl_Position = gl_in[i].gl_Position+offset;	     \n\
-					EmitVertex();								     \n\
-				}											   	     \n\
-				EndPrimitive();										 \n\
-			}"	};
 
 
 
 
 		GLuint vertex_shader;
-		GLuint geom_shader;
 		GLuint fragment_shader;
+		GLuint geom_shader;
 		GLuint program;
 
 		vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertex_shader, 1, vertex_shader_source, NULL);
 		glCompileShader(vertex_shader);
 
-		geom_shader = glCreateShader(GL_VERTEX_SHADER);
+		geom_shader = glCreateShader(GL_GEOMETRY_SHADER);
 		glShaderSource(geom_shader, 1, geom_shader_source, NULL);
 		glCompileShader(geom_shader);
-
 
 		fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment_shader, 1, fragment_shader_source, NULL);
@@ -249,16 +310,94 @@ namespace MyGeomShader {
 
 		program = glCreateProgram();
 		glAttachShader(program, vertex_shader);
-		glAttachShader(program, geom_shader);
 		glAttachShader(program, fragment_shader);
+		glAttachShader(program, geom_shader);
 		glLinkProgram(program);
 
 		glDeleteShader(vertex_shader);
-		glDeleteShader(geom_shader);
 		glDeleteShader(fragment_shader);
 
 		return program;
 	}
+	
+
+	//EX0 (with an attempt to pass a variable)
+	/*
+	GLuint myShaderCompile(void) {
+	static const GLchar * vertex_shader_source[] =
+	{
+	"#version 330										\n\
+	\n\
+	in float time;\n\
+	void main() {\n\
+	const vec4 vertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0+1/1000),\n\
+	vec4(0.25, 0.25, 0.5, 1.0),\n\
+	vec4( -0.25,  -0.25, 0.5, 1.0));\n\
+	gl_Position = vertices[gl_VertexID]+time/1000;\n\
+	}"
+	};
+
+	static const GLchar * geom_shader_source[] =
+	{ "#version 330\n\
+	layout(triangles) in;\n\
+	layout(triangle_strip, max_vertices = 3) out;\n\
+	void main()\n\
+	{\n\
+	for (int i = 0; i<3; i++)\n\
+	{\n\
+	gl_Position = gl_in[i].gl_Position+vec4(0.5,0.5,0.0,0.0);\n\
+	EmitVertex();\n\
+	}\n\
+	EndPrimitive();\n\
+	}" };
+
+
+	static const GLchar * fragment_shader_source[] =
+	{
+	"#version 330\n\
+	\n\
+	out vec4 color;\n\
+	\n\
+	void main() {\n\
+	color = vec4(0.0,0.8,1.0,1.0);\n\
+	}"
+	};
+	
+	
+
+
+	GLuint vertex_shader;
+	GLuint fragment_shader;
+	GLuint geom_shader;
+	GLuint program;
+
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertex_shader, 1, vertex_shader_source, NULL);
+	glCompileShader(vertex_shader);
+
+	geom_shader = glCreateShader(GL_GEOMETRY_SHADER);
+	glShaderSource(geom_shader, 1, geom_shader_source, NULL);
+	glCompileShader(geom_shader);
+
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragment_shader, 1, fragment_shader_source, NULL);
+	glCompileShader(fragment_shader);
+
+	program = glCreateProgram();
+	glAttachShader(program, vertex_shader);
+	glAttachShader(program, fragment_shader);
+	glAttachShader(program, geom_shader);
+	glLinkProgram(program);
+
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader);
+
+	return program;
+	}
+	
+	*/
+
+
 
 
 	void  myInitCode(void) {
@@ -274,13 +413,18 @@ namespace MyGeomShader {
 	void myRenderCode(double currentTime) {
 
 		glUseProgram(myRenderProgram);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat) currentTime);
+		glDrawArrays(GL_TRIANGLES, 0, 9);
 
 
 	}
 
 
+
 }
+
+
+
 
 ////////////////////////////////////////////////// BOX
 namespace Box{
