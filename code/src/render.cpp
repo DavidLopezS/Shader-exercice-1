@@ -308,31 +308,6 @@ namespace  MyGeomShader {
 			}" };
 			*/
 
-
-
-	
-		//exercise 7: make the cube face rotate (with trigonometry)
-		static const GLchar * geom_shader_source[] =
-		{
-			"#version 330																		\n\
-		uniform float time;																	\n\
-		layout(triangles) in;																\n\
-		layout(triangle_strip, max_vertices = 4) out;										\n\
-		vec4 vertices[4] = vec4[4](vec4(0.25*cos(time) , -0.25, 0.5*sin(time), 1.0),		\n\
-								 vec4(0.25*cos(time)  , 0.25, 0.5*sin(time), 1.0),			\n\
-								 vec4(-0.25*cos(time)  , -0.25, 0.5*sin(time), 1.0),		\n\
-								 vec4(-0.25*cos(time)  , 0.25, 0.5*sin(time), 1.0));		\n\
-																							\n\
-		void main()																			\n\
-		{																					\n\
-			for(int i= 0; i<4; i++){														\n\
-				gl_Position = gl_in[0].gl_Position  + vertices[i];							\n\
-				EmitVertex();																\n\
-			}																				\n\
-			EndPrimitive();																	\n\
-		}"
-		};
-
 		//exercise 7 b: make the cube face rotate (with transformation matrix)
 
 		GLuint vertex_shader;
@@ -377,6 +352,7 @@ namespace  MyGeomShader {
 
 
 
+
 	void myCleanupCode() {
 		glDeleteVertexArrays(1, &myVAO);
 		glDeleteProgram(myRenderProgram);
@@ -388,27 +364,18 @@ namespace  MyGeomShader {
 		glBindVertexArray(myVAO);
 	}
 
-	void myRenderCode(double currentTime) {
-		glUseProgram(myRenderProgram);
-		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat)currentTime);
-	//	glUniform4f(glGetUniformLocation(myRenderProgram, "initPos"), 0.0f,0.0f,-1.0f,0.0f);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-	}
-
-
 	glm::mat4 myMVP;
 	void myRenderCode(double currentTime) {
 
 		glUseProgram(myRenderProgram);
-		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat) currentTime);
+		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat)currentTime);
 		glm::mat4 rot = glm::rotate(glm::mat4(), 0.05f, glm::vec3(0.f, 1.f, 0.f));
 		myMVP = rot * myMVP;
 		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(myMVP));
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
-
+	}
 }
 
 
