@@ -245,7 +245,7 @@ namespace  MyGeomShader {
 		/*
 		//to draw a square on each vertex from the vertex shader:
 		static const GLchar * geom_shader_source[] =
-<<<<<<< HEAD
+
 		{ "#version 330\n\
 		layout(triangles) in;\n\
 		layout(triangle_strip, max_vertices = 6) out;\n\
@@ -287,22 +287,6 @@ namespace  MyGeomShader {
 			EndPrimitive();																	\n\
 			}" 
 		};
-=======
-		{ "#version 330										\n\
-			layout(triangles) in;							\n\
-			layout(triangle_strip, max_vertices =4)	out;\n\
-			const vec4 vertices[4] = vec4[4](vec4(0.25, -0.25, 0.5, 1.0),\n\
-											vec4(0.25, 0.25, 0.5, 1.0),\n\
-											vec4(-0.25,  -0.25, 0.5, 1.0),\n\
-											vec4(-0.25,  0.25, 0.5, 1.0)); \n\
-			void main(){									\n\
-			for(int i=0; i< 4; i++){						\n\
-				gl_Position =gl_in[0].gl_Position +vertices[i];	\n\
-				EmitVertex();								\n\
-			}												\n\
-			EndPrimitive();									\n\
-			}" 		};
-			*/
 
 		/*
 		//to draw a square based on a uniform variable:
@@ -323,7 +307,7 @@ namespace  MyGeomShader {
 			EndPrimitive();									\n\
 			}" };
 			*/
->>>>>>> 9c9afb7bc8a6e9b7ac8b436b9335438e64480f7d
+
 
 
 	
@@ -412,7 +396,7 @@ namespace  MyGeomShader {
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 
-<<<<<<< HEAD
+
 	glm::mat4 myMVP;
 	void myRenderCode(double currentTime) {
 
@@ -422,10 +406,7 @@ namespace  MyGeomShader {
 		myMVP = rot * myMVP;
 		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(myMVP));
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-=======
 
-
->>>>>>> 9c9afb7bc8a6e9b7ac8b436b9335438e64480f7d
 
 
 }

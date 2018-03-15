@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 ﻿  render.cpp
-  GL_framework.vcxproj -> D:\DATA\Universitat\3er Any\Informàtica gràfica\GeometryShader\x64\Debug\GL_framework.exe
-=======
-﻿  render_prims.cpp
-  render.cpp
-  physics.cpp
-  main.cpp
-  Generating Code...
-  GL_framework.vcxproj -> C:\Users\dlopez\Documents\GitHub\Shader-exercice-1\x64\Debug\GL_framework.exe
-  GL_framework.vcxproj -> C:\Users\dlopez\Documents\GitHub\Shader-exercice-1\x64\Debug\GL_framework.pdb (Partial PDB)
-  0 File(s) copied
-  0 File(s) copied
->>>>>>> 9c9afb7bc8a6e9b7ac8b436b9335438e64480f7d
+d:\data\universitat\3er any\informàtica gràfica\geometryshader\code\src\render.cpp(315): error C2374: 'geom_shader_source': nueva definición; inicialización múltiple
+  d:\data\universitat\3er any\informàtica gràfica\geometryshader\code\src\render.cpp(269): note: vea la declaración de 'geom_shader_source'
+d:\data\universitat\3er any\informàtica gràfica\geometryshader\code\src\render.cpp(401): error C2084: la función 'void MyGeomShader::myRenderCode(double)' ya tiene un cuerpo
+  d:\data\universitat\3er any\informàtica gràfica\geometryshader\code\src\render.cpp(391): note: vea la definición anterior de 'myRenderCode'
+d:\data\universitat\3er any\informàtica gràfica\geometryshader\code\src\render.cpp(184): fatal error C1075: el elemento llave '{' de la izquierda estaba sin asignar al final del archivo
