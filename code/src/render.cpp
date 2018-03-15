@@ -257,24 +257,28 @@ namespace MyFirstShader {
 			}\n\
 		EndPrimitive();\n\
 		}" };*/
+
 		static const GLchar * geom_shader_source[] =
-		{ "#version 330\n\
-	uniform float time;\n\
-	layout(triangles) in;\n\
-	layout(triangle_strip, max_vertices = 4) out;\n\
-		const vec4 vertices[4] = vec4[4](vec4( 0.25, -0.25, 0.5, 1.0),\n\
-									   vec4(0.25, 0.25, 0.5, 1.0),\n\
-										vec4( -0.25,  -0.25, 0.5, 1.0), vec4( -0.25,  0.25, 0.5, 1.0));\n\
-	void main()\n\
-	{\n\
-			vec4 offset = vec4(0.5-sin(time),0.5,0.0,0.0); \n\
-	for (int i = 0; i<4; i++)\n\
-	{\n\
-	gl_Position = vertices[i] + gl_in[0].gl_Position+offset;\n\
-	EmitVertex();\n\
-	}\n\
-	EndPrimitive();\n\
-	}" };
+		{	"#version 330																	\n\
+		uniform float time;																	\n\
+		uniform mat4 mvpMat;																\n\
+																							\n\
+		layout(triangles) in;																\n\
+		layout(triangle_strip, max_vertices = 4) out;										\n\
+		vec4 vertices[4] = vec4[4](vec4(0.25 , -0.25, 0, 1.0),								\n\
+								 vec4(0.25  , 0.25, 0, 1.0),								\n\
+								 vec4(-0.25  , -0.25, 0, 1.0),								\n\
+								 vec4(-0.25  , 0.25, 0, 1.0));								\n\
+																							\n\
+		void main()																			\n\
+		{																					\n\
+			for(int i= 0; i<4; i++){														\n\
+				gl_Position = mvpMat * vertices[i];											\n\
+				EmitVertex();																\n\
+			}																				\n\
+			EndPrimitive();																	\n\
+			}" 
+		};
 
 
 		static const GLchar * fragment_shader_source[] =
@@ -409,12 +413,15 @@ namespace MyFirstShader {
 
 	}
 
-
+	glm::mat4 myMVP;
 	void myRenderCode(double currentTime) {
 
 		glUseProgram(myRenderProgram);
 		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat) currentTime);
-		glDrawArrays(GL_TRIANGLES, 0, 9);
+		glm::mat4 rot = glm::rotate(glm::mat4(), 0.05f, glm::vec3(0.f, 1.f, 0.f));
+		myMVP = rot * myMVP;
+		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(myMVP));
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
 	}
