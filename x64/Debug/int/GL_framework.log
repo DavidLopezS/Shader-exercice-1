@@ -1,2 +1,14 @@
+<<<<<<< HEAD
 ﻿  render.cpp
   GL_framework.vcxproj -> D:\DATA\Universitat\3er Any\Informàtica gràfica\GeometryShader\x64\Debug\GL_framework.exe
+=======
+﻿  render_prims.cpp
+  render.cpp
+  physics.cpp
+  main.cpp
+  Generating Code...
+  GL_framework.vcxproj -> C:\Users\dlopez\Documents\GitHub\Shader-exercice-1\x64\Debug\GL_framework.exe
+  GL_framework.vcxproj -> C:\Users\dlopez\Documents\GitHub\Shader-exercice-1\x64\Debug\GL_framework.pdb (Partial PDB)
+  0 File(s) copied
+  0 File(s) copied
+>>>>>>> 9c9afb7bc8a6e9b7ac8b436b9335438e64480f7d
