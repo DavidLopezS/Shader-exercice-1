@@ -215,10 +215,15 @@ namespace  MyGeomShader {
 			"#version 330\n\
 			\n\
 			out vec4 color;\n\
-			\n\
 			void main() {\n\
-			color = vec4(0.0,0.8,1.0,1.0);\n\
-			}" 	};
+			vec4 colors[6]; \n\
+			colors[0] = vec4(0.4,0.2,0.6,1.0);\n\
+			colors[1] = vec4(0.2,0.9,0.4,1.0);\n\
+			colors[2] = vec4(0.1,0.2,0.8,1.0);\n\
+			colors[3] = vec4(0.8,0.2,0.9,1.0);\n\
+			colors[4] = vec4(0.3,0.6,0.6,1.0);\n\
+			colors[5] = vec4(0.8,0.4,0.6,1.0);\n\
+			color = colors[gl_PrimitiveID];}" 	};
 
 
 		/*
@@ -267,25 +272,82 @@ namespace  MyGeomShader {
 		}" };*/
 
 		static const GLchar * geom_shader_source[] =
-		{	"#version 330																	\n\
-		uniform float time;																	\n\
-		uniform mat4 mvpMat;																\n\
-																							\n\
-		layout(triangles) in;																\n\
-		layout(triangle_strip, max_vertices = 4) out;										\n\
-		vec4 vertices[4] = vec4[4](vec4(0.25 , -0.25, 0, 1.0),								\n\
-								 vec4(0.25  , 0.25, 0, 1.0),								\n\
-								 vec4(-0.25  , -0.25, 0, 1.0),								\n\
-								 vec4(-0.25  , 0.25, 0, 1.0));								\n\
-																							\n\
-		void main()																			\n\
-		{																					\n\
-			for(int i= 0; i<4; i++){														\n\
-				gl_Position = mvpMat * vertices[i];											\n\
-				EmitVertex();																\n\
-			}																				\n\
-			EndPrimitive();																	\n\
-			}" 
+		{ 
+			"#version 330																		\n\
+			uniform float time;																	\n\
+			uniform mat4 objMat;																\n\
+			uniform mat4 mouseMat;																\n\
+																								\n\
+			layout(triangles) in;																\n\
+			layout(triangle_strip, max_vertices = 24) out;										\n\
+			void main()																			\n\
+			{																					\n\
+					vec4 vertices[4] = vec4[4](vec4(0.5, 0, 0, 1.0),							\n\
+					vec4(0, 0, 0, 1.0),															\n\
+					vec4(0.5, 0.5, 0, 1.0),														\n\
+					vec4(0, 0.5, 0, 1.0));														\n\
+																								\n\
+				for(int i= 0; i<4; i++){														\n\
+					gl_Position = mouseMat * objMat * vertices[i];	gl_PrimitiveID = 0;						\n\
+					EmitVertex();																\n\
+				}																				\n\
+				EndPrimitive();																	\n\
+																								\n\
+					vec4 vertices2[4] = vec4[4](vec4(0.5, 0.5, 0, 1.0),							\n\
+					vec4(0, 0.5, 0, 1.0),														\n\
+					vec4(0.5, 0.5, 0.5, 1.0),													\n\
+					vec4(0, 0.5, 0.5, 1.0));													\n\
+																								\n\
+			for (int i = 0; i<4; i++) {															\n\																		\n\
+					gl_Position = mouseMat * objMat * vertices2[i]; gl_PrimitiveID = 1;			\n\
+					EmitVertex();																\n\
+			}																					\n\
+				EndPrimitive();																	\n\
+																								\n\
+				vec4 vertices3[4] = vec4[4](vec4(0, 0, 0.5, 1.0),								\n\
+					vec4(0.5, 0, 0.5, 1.0),														\n\
+					vec4(0, 0.5, 0.5, 1.0),														\n\
+					vec4(0.5, 0.5, 0.5, 1.0));													\n\
+																								\n\
+			for (int i = 0; i<4; i++) {															\n\																				\n\
+					gl_Position = mouseMat * objMat * vertices3[i]; gl_PrimitiveID = 2;			\n\
+					EmitVertex();																\n\
+			}																					\n\
+				EndPrimitive();																	\n\
+																								\n\
+			vec4 vertices4[4] = vec4[4](vec4(0, 0, 0, 1.0),										\n\
+					vec4(0.5, 0, 0, 1.0),														\n\
+					vec4(0, 0, 0.5, 1.0),														\n\
+					vec4(0.5, 0, 0.5, 1.0));													\n\
+																								\n\
+			for (int i = 0; i<4; i++) {															\n\																				\n\
+					gl_Position = mouseMat * objMat * vertices4[i]; gl_PrimitiveID = 3;			\n\
+					EmitVertex();																\n\
+			}																					\n\
+				EndPrimitive();																	\n\
+																								\n\
+			vec4 vertices5[4] = vec4[4](vec4(0, 0, 0, 1.0),										\n\
+					vec4(0, 0, 0.5, 1.0),														\n\
+					vec4(0, 0.5, 0, 1.0),														\n\
+					vec4(0, 0.5, 0.5, 1.0));													\n\
+																								\n\
+			for (int i = 0; i<4; i++) {															\n\
+					gl_Position = mouseMat * objMat * vertices5[i]; gl_PrimitiveID = 4;			\n\
+					EmitVertex();																\n\
+			}																					\n\
+				EndPrimitive();																	\n\
+																								\n\
+			vec4 vertices6[4] = vec4[4](vec4(0.5, 0, 0.5, 1.0),									\n\
+					vec4(0.5, 0, 0, 1.0),														\n\
+					vec4(0.5, 0.5, 0.5, 1.0),													\n\
+					vec4(0.5, 0.5, 0, 1.0));													\n\
+																								\n\
+			for (int i = 0; i<4; i++) {															\n\
+					gl_Position = mouseMat * objMat * vertices6[i]; gl_PrimitiveID = 5;			\n\
+					EmitVertex();																\n\
+			}																					\n\
+				EndPrimitive();																	\n\
+			}"
 		};
 
 		/*
@@ -364,14 +426,18 @@ namespace  MyGeomShader {
 		glBindVertexArray(myVAO);
 	}
 
-	glm::mat4 myMVP;
+	glm::mat4 totalRot;
 	void myRenderCode(double currentTime) {
 
 		glUseProgram(myRenderProgram);
 		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat)currentTime);
 		glm::mat4 rot = glm::rotate(glm::mat4(), 0.05f, glm::vec3(0.f, 1.f, 0.f));
-		myMVP = rot * myMVP;
-		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+		totalRot = rot * totalRot;
+		glm::mat4 tras = glm::translate(glm::mat4(), glm::vec3(-0.25, -0.25, -0.25));
+		glm::mat4 objMat =   totalRot * tras;
+		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(objMat));
+		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mouseMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
@@ -414,9 +480,9 @@ GLubyte cubeIdx[] = {
 const char* vertShader_xform =
 "#version 330\n\
 in vec3 in_Position;\n\
-uniform mat4 mvpMat;\n\
+uniform mat4 objMat;\n\
 void main() {\n\
-	gl_Position = mvpMat * vec4(in_Position, 1.0);\n\
+	gl_Position = objMat * vec4(in_Position, 1.0);\n\
 }";
 const char* fragShader_flatColor =
 "#version 330\n\
@@ -463,7 +529,7 @@ void cleanupCube() {
 void drawCube() {
 	glBindVertexArray(cubeVao);
 	glUseProgram(cubeProgram);
-	glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+	glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 	// FLOOR
 	glUniform4f(glGetUniformLocation(cubeProgram, "color"), 0.6f, 0.6f, 0.6f, 1.f);
 	glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, 0);
@@ -512,10 +578,10 @@ const char* Axis_vertShader =
 in vec3 in_Position;\n\
 in vec4 in_Color;\n\
 out vec4 vert_color;\n\
-uniform mat4 mvpMat;\n\
+uniform mat4 objMat;\n\
 void main() {\n\
 	vert_color = in_Color;\n\
-	gl_Position = mvpMat * vec4(in_Position, 1.0);\n\
+	gl_Position = objMat * vec4(in_Position, 1.0);\n\
 }";
 const char* Axis_fragShader =
 "#version 330\n\
@@ -568,7 +634,7 @@ void cleanupAxis() {
 void drawAxis() {
 	glBindVertexArray(AxisVao);
 	glUseProgram(AxisProgram);
-	glUniformMatrix4fv(glGetUniformLocation(AxisProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+	glUniformMatrix4fv(glGetUniformLocation(AxisProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 	glDrawElements(GL_LINES, 6, GL_UNSIGNED_BYTE, 0);
 
 	glUseProgram(0);
@@ -699,7 +765,7 @@ void updateSphere(glm::vec3 pos, float radius) {
 void drawSphere() {
 	glBindVertexArray(sphereVao);
 	glUseProgram(sphereProgram);
-	glUniformMatrix4fv(glGetUniformLocation(sphereProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+	glUniformMatrix4fv(glGetUniformLocation(sphereProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 	glUniformMatrix4fv(glGetUniformLocation(sphereProgram, "mv_Mat"), 1, GL_FALSE, glm::value_ptr(RV::_modelView));
 	glUniformMatrix4fv(glGetUniformLocation(sphereProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(RV::_projection));
 	glUniform4f(glGetUniformLocation(sphereProgram, "color"), 0.6f, 0.1f, 0.1f, 1.f);
@@ -877,7 +943,7 @@ void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius) {
 void drawCapsule() {
 	glBindVertexArray(capsuleVao);
 	glUseProgram(capsuleProgram);
-	glUniformMatrix4fv(glGetUniformLocation(capsuleProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+	glUniformMatrix4fv(glGetUniformLocation(capsuleProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 	glUniformMatrix4fv(glGetUniformLocation(capsuleProgram, "mv_Mat"), 1, GL_FALSE, glm::value_ptr(RV::_modelView));
 	glUniformMatrix4fv(glGetUniformLocation(capsuleProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(RV::_projection));
 	glUniform4fv(glGetUniformLocation(capsuleProgram, "camPoint"), 1, &RV::_cameraPoint[0]);
@@ -938,7 +1004,7 @@ void updateParticles(int startIdx, int count, float* array_data) {
 void drawParticles(int startIdx, int count) {
 	glBindVertexArray(particlesVao);
 	glUseProgram(Sphere::sphereProgram);
-	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "mv_Mat"), 1, GL_FALSE, glm::value_ptr(RV::_modelView));
 	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(RV::_projection));
 	glUniform4f(glGetUniformLocation(Sphere::sphereProgram, "color"), 0.1f, 0.1f, 0.6f, 1.f);
@@ -964,9 +1030,9 @@ int numVirtualVerts;
 const char* cloth_vertShader =
 "#version 330\n\
 in vec3 in_Position;\n\
-uniform mat4 mvpMat;\n\
+uniform mat4 objMat;\n\
 void main() {\n\
-	gl_Position = mvpMat * vec4(in_Position, 1.0);\n\
+	gl_Position = objMat * vec4(in_Position, 1.0);\n\
 }";
 const char* cloth_fragShader =
 "#version 330\n\
@@ -1037,7 +1103,7 @@ void drawClothMesh() {
 	glEnable(GL_PRIMITIVE_RESTART);
 	glBindVertexArray(clothVao);
 	glUseProgram(clothProgram);
-	glUniformMatrix4fv(glGetUniformLocation(clothProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+	glUniformMatrix4fv(glGetUniformLocation(clothProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 	glUniform4f(glGetUniformLocation(clothProgram, "color"), 0.1f, 1.f, 1.f, 0.f);
 	glDrawElements(GL_LINE_LOOP, numVirtualVerts, GL_UNSIGNED_BYTE, 0);
 
@@ -1120,9 +1186,9 @@ namespace Cube {
 	out vec4 vert_Normal;\n\
 	uniform mat4 objMat;\n\
 	uniform mat4 mv_Mat;\n\
-	uniform mat4 mvpMat;\n\
+	uniform mat4 objMat;\n\
 	void main() {\n\
-		gl_Position = mvpMat * objMat * vec4(in_Position, 1.0);\n\
+		gl_Position = objMat * objMat * vec4(in_Position, 1.0);\n\
 		vert_Normal = mv_Mat * objMat * vec4(in_Normal, 0.0);\n\
 	}";
 
@@ -1186,7 +1252,7 @@ void main() {\n\
 		glUseProgram(cubeProgram);
 		glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(objMat));
 		glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "mv_Mat"), 1, GL_FALSE, glm::value_ptr(RenderVars::_modelView));
-		glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RenderVars::_MVP));
+		glUniformMatrix4fv(glGetUniformLocation(cubeProgram, "objMat"), 1, GL_FALSE, glm::value_ptr(RenderVars::_MVP));
 		glUniform4f(glGetUniformLocation(cubeProgram, "color"), 0.1f, 1.f, 1.f, 0.f);
 		glDrawElements(GL_TRIANGLE_STRIP, numVerts, GL_UNSIGNED_BYTE, 0);
 	
