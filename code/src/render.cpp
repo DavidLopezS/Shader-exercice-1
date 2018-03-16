@@ -371,7 +371,7 @@ namespace  MyGeomShader {
 		glUniform1f(glGetUniformLocation(myRenderProgram, "time"), (GLfloat)currentTime);
 		glm::mat4 rot = glm::rotate(glm::mat4(), 0.05f, glm::vec3(0.f, 1.f, 0.f));
 		myMVP = rot * myMVP;
-		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(myMVP));
+		glUniformMatrix4fv(glGetUniformLocation(myRenderProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
