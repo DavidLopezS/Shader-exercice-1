@@ -288,7 +288,7 @@ namespace  MyGeomShader {
 					vec4(0, 0.5, 0, 1.0));														\n\
 																								\n\
 				for(int i= 0; i<4; i++){														\n\
-					gl_Position = mouseMat * objMat * vertices[i];	gl_PrimitiveID = 0;						\n\
+					gl_Position = mouseMat * objMat * vertices[i];	gl_PrimitiveID = 0;			\n\
 					EmitVertex();																\n\
 				}																				\n\
 				EndPrimitive();																	\n\
